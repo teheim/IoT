@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Weather Data</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            text-align: center;
+        }
+        table {
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .pagination {
+            display: inline-block;
+            padding: 0;
+            margin-top: 20px;
+        }
+        .pagination a {
+            color: black;
+            float: left;
+            padding: 8px 16px;
+            text-decoration: none;
+            transition: background-color .3s;
+            border: 1px solid #ddd;
+            margin: 0 4px;
+        }
+        .pagination a.active {
+            background-color: #4CAF50;
+            color: white;
+            border: 1px solid #4CAF50;
+        }
+        .pagination a:hover:not(.active) {background-color: #ddd;}
+        .filter-form {
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Weather Data</h1>
+    <div class="filter-form">
+        <form action="/" method="get">
+            <label for="date">Filter by Date:</label>
+            <input type="date" id="date" name="date" value="{{ date_filter }}">
+            <button type="submit">Filter</button>
+        </form>
+    </div>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Topic</th>
+            <th>Temperature (°C)</th>
+            <th>Timestamp</th>
+        </tr>
+        {% for row in data %}
+            <tr>
+                <td>{{ row[0] }}</td>
+                <td>{{ row[1] }}</td>
+                <td>{{ row[2] }}</td>
+                <td>{{ row[3] }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <div class="pagination">
+        {% for i in range(1, total_pages + 1) %}
+            <a href="/?page={{ i }}{% if date_filter %}&date={{ date_filter }}{% endif %}" class="{{ 'active' if i == page else '' }}">{{ i }}</a>
+        {% endfor %}
+    </div>
+
+    <h2>Today's Temperature Graph</h2>
+    <canvas id="temperatureChart" width="400" height="200"></canvas>
+
+    <script>
+        var graphData = {
+            labels: [],
+            datasets: [{
+                label: 'Temperature',
+                data: [],
+                backgroundColor: 'rgba(0, 123, 255, 0.5)',
+                borderColor: 'rgba(0, 123, 255, 1)',
+                borderWidth: 1
+            }]
+        };
+
+        {% for timestamp, temperature in graph_data %}
+            graphData.labels.push("{{ timestamp.split(' ')[1] }}");
+            graphData.datasets[0].data.push({{ temperature }});
+        {% endfor %}
+
+        var ctx = document.getElementById('temperatureChart').getContext('2d');
+        var temperatureChart = new Chart(ctx, {
+            type: 'line',
+            data: graphData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: false
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
