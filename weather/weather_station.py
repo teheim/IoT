@@ -4,7 +4,7 @@ import random
 
 # MQTT settings
 MQTT_BROKER = "192.168.244.128"
-MQTT_PORT = 1884
+MQTT_PORT = 1883
 MQTT_TOPIC = "weather/temperature"
 
 def main():
