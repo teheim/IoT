@@ -1,7 +1,7 @@
 # IoT Weather Station Emulation
 
 ## Overview
-This project is an emulation of an IoT weather station, designed to simulate weather data and send it to an MQTT server. It's useful for testing and development without needing physical hardware.
+This project is an emulation of an IoT weather station, designed to simulate weather data and send it to an MQTT server.
 
 ## Requirements
 - **MQTT Server**: Ensure you have an MQTT server running on port 1883.
